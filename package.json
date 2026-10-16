@@ -1,0 +1,36 @@
+{
+  "name": "llm-gateway",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch src --ext ts,js,json --exec ts-node --transpile-only src/server.ts",
+    "start:dev": "nodemon --watch src --ext ts,js,json --exec ts-node --transpile-only src/server.ts"
+  },
+  "dependencies": {
+    "@fastify/http-proxy": "^11.6.4",
+    "@nestjs/common": "^12.1.3",
+    "@nestjs/config": "^12.0.1",
+    "@nestjs/core": "^12.1.3",
+    "@nestjs/platform-express": "^12.1.3",
+    "axios": "^1.20.0",
+    "dotenv": "^18.0.8",
+    "express": "^4.22.3",
+    "fastify": "^5.12.7",
+    "http-proxy-middleware": "^4.2.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "spdy": "^4.0.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^12.0.8",
+    "@types/express": "^4.17.25",
+    "@types/http-proxy-middleware": "^0.19.3",
+    "@types/node": "^20.19.43",
+    "@types/spdy": "^3.4.9",
+    "nodemon": "^3.1.14",
+    "selfsigned": "^5.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

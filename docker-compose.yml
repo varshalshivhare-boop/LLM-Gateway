@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # ------------------------------------------------------------
+  # 1. Express.js + TypeScript App (Without Dockerfile)
+  # ------------------------------------------------------------
+  app:
+    image: node:20-alpine
+    container_name: express_ts_app
+    restart: always
+    working_dir: /app
+    # Code ko local system se container ke andar mount kar rahe hain
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      # Internal Docker hosts: 'postgres' and 'redis'
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/mydb
+      - REDIS_URL=redis://redis:6379
+    # Pehle install hoga, fir TS build hoga, fir server run hoga
+    command: sh -c "npm install && npm run build && npm run start"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - app-network
+
+  # ------------------------------------------------------------
+  # 2. PostgreSQL Database Service
+  # ------------------------------------------------------------
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # ------------------------------------------------------------
+  # 3. Redis Cache Service
+  # ------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: redis_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - app-network
+
+# Data persistence for Postgres & Redis
+volumes:
+  pgdata:
+  redisdata:
+
+# Internal network for container-to-container communication
+networks:
+  app-network:
+    driver: bridge
